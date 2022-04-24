@@ -1,0 +1,7 @@
+CALL apoc.load.json("file:///C:/Users/wit_w/OneDrive/Desktop/reactions2.json")
+YIELD value
+MERGE (c:Tweets {id: value.id}) ON CREATE SET c.name = value.user.name
+WITH c, value
+UNWIND value AS parent
+MERGE (p:Tweets {id: parent.in_reply_to_status_id}) ON CREATE SET p.name = parent.in_reply_to_screen_name
+MERGE (p)-[:REPLY_BY]->(c);
